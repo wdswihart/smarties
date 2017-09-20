@@ -26,11 +26,14 @@
 
 // MAIN:
 
-var population; // A population of rockets
-const MAX_FRAMES = 500; // Max frames to animate
-var currentFrame = 0;
-var titleP; // <p></p> for a title, and maybe some basic info.
-var frameP; // <p></p> containing frame of current generation.
+const NUM_ROCKETS = 15; // Total amount of rockets
+const LIFESPAN = 200; // How many frames to run each generation for
+var generation; // Current generation of rockets
+var currentGeneration = 0; // Count for generations
+var target; // The target for the rockets to aim for
+var titleP; // <p> for a title, and maybe some basic info.
+var generationP; // <p> for currentGeneration
+var ageP; // <p> containing age of current generation.
 
 // SETUP & DRAW (p5.js):
 
@@ -38,22 +41,47 @@ function setup() {
     // Create the canvas.
     createCanvas(640, 480);
     
-    // Create the population of rockets.
-    population = new Population(10, MAX_FRAMES);
+    // Create the first generation of rockets.
+    nextGeneration();
 
-    // Create the frame <p></p>.
-    frameP = createP();
+    // Init the target's location.
+    target = new Target(width / 2, height / 20);
+
+    // Create the DOM elements, the labels.
+    titleP = createP();
+    titleP.style("text-align", "center");
+    titleP.style("text-decoration", "underline");
+    titleP.html("<strong>SMARTIES</strong>");
+    generationP = createP();
+    generationP.style("text-align", "center");
+    ageP = createP();    
+    ageP.style("text-align", "center");
 }
 
 function draw() {
     // Fill the background.
     background(0);
 
-    // Update and show the population.
-    population.update();
-    population.show();
+    // Update and show the generation.
+    generation.update();
+    generation.show();
 
-    // Update frame display, then incriment the frame.
-    frameP.html("Frame: <strong>" + currentFrame + "</strong>");
-    currentFrame++;
+    // Show the target.
+    target.show();
+
+    // Update the DOM elements.
+    generationP.html("Generation: <strong>" + currentGeneration + "</strong>")
+    ageP.html("Age: <strong>" + generation.age + "</strong>");
+
+    // Spawn next generation if lifespan over.
+    if (generation.age >= LIFESPAN) {
+        nextGeneration();
+    }
+}
+
+// METHODS:
+
+function nextGeneration() {
+    generation = new Generation(NUM_ROCKETS, LIFESPAN);
+    currentGeneration++;
 }

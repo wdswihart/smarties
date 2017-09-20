@@ -1,4 +1,4 @@
-// Population.js is the implementation of a group of rockets.
+// Target.js is an implementation of a target (think "bullseye").
 //
 // Copyright (c) 2017 William Swihart
 //
@@ -23,36 +23,20 @@
 // DEPENDENCIES:
 // p5.js
 
-function Population(size = 25, rocketMoves = 100) {
+function Target(x = width / 20, y = width / 20) {
     // FIELDS:
 
-    this.rockets = [];
-    this.size = size;
+    this.position = createVector(x, y);
 
-    // INIT:
+    // INITIALIZATION:
 
-    for (var i = 0; i < this.size; i++) {
-        this.rockets[i] = new Rocket(rocketMoves);
-    }
-
-    // METHODS:
-
-    // Update the rockets.
-    // IN: void
-    // OUT: void
-    this.update = function() {
-        for (var i = 0; i < this.size; i++) {
-            this.rockets[i].applyForce(this.rockets[i].moves[])
-            this.rockets[i].update();
-        }
-    }
-
-    // Show the rockets.
-    // IN: void
-    // OUT: void
     this.show = function() {
-        for (var i = 0; i < this.size; i++) {
-            this.rockets[i].show();
-        }
+        ellipseMode(CENTER);
+        fill(150);
+        ellipse(this.position.x, this.position.y, 30, 30);
+        fill(240);
+        ellipse(this.position.x, this.position.y, 20, 20);
+        fill(255, 0, 0);
+        ellipse(this.position.x, this.position.y, 10, 10);
     }
 }

@@ -1,4 +1,4 @@
-// Rocket.js is the implementation of a single "smart" rocket.
+// Rocket.js is an implementation of a single "smart" rocket.
 //
 // Copyright (c) 2017 William Swihart
 //
@@ -35,31 +35,24 @@ function Rocket(numMoves = 100) {
     this.height = 25;
     this.moves = [];
     
-    // INIT:
+    // INITIALIZATION:
 
+    // Init moves.
     for (var i = 0; i < numMoves; i++) {
         this.moves[i] = p5.Vector.random2D();
+        this.moves[i].setMag(0.3); // Reduce the velocity.
     }
 
     // METHODS:
 
-    // Increase acceleration by some force.
+    // applyForce increases acceleration by some force.
     // IN: a force
     // OUT: updated acceleration
     this.applyForce = function(force) {
         this.acceleration.add(force);
     }
 
-    // Update velocity, position, and acceleration.
-    // IN: void
-    // OUT: updated velolcity, position, and acceleration 
-    this.update = function() {
-        this.velocity.add(this.acceleration);
-        this.position.add(this.velocity);
-        this.acceleration.mult(0); // Reset acceleration. TO-DO: Gravity?
-    }
-
-    // Show this rocket.
+    // show draws this rocket.
     // IN: void
     // OUT: void
     this.show = function() {
@@ -73,5 +66,14 @@ function Rocket(numMoves = 100) {
         fill(255, 90, 30);
         rect(0, this.height * 0.78, this.width * 0.7, this.height * 0.5)
         pop();
+    }
+
+    // update updates velocity, position, and acceleration.
+    // IN: void
+    // OUT: updated velolcity, position, and acceleration 
+    this.update = function() {
+        this.velocity.add(this.acceleration);
+        this.position.add(this.velocity);
+        this.acceleration.mult(0); // Reset acceleration. TO-DO: Gravity?
     }
 }
