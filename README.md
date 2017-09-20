@@ -2,7 +2,7 @@
 
 *Smarties* is a smart rocket implementation using [p5.js](https://p5js.org/).
 
-## Goals
+# Goals
 
 - Learn concepts of genetic algorithms
 - Learn [p5.js](https://p5js.org/)
