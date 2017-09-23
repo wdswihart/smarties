@@ -40,4 +40,12 @@ function Target(x = width / 20, y = width / 20, radius = 30) {
         fill(255, 0, 0);
         ellipse(this.position.x, this.position.y, 0.33 * this.radius, 0.33 * this.radius);
     }
+
+    // METHODS:
+
+    // randomize randomizes the location of the target.
+    this.randomize = function(canvasWidth, canvasHeight, buffer) {
+        this.position.x = random(buffer, canvasWidth - buffer);
+        this.position.y = random(buffer, canvasHeight - buffer);
+    }
 }

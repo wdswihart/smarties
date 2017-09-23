@@ -57,16 +57,15 @@ function Rocket(numMoves = 100, moves = []) {
     // IN: target with a position (x, y)
     // OUT: fitness set to (1 / distance to that target)
     this.calcFitness = function(target, age) {
-        var distance = dist(this.position.x, this.position.y,
-            target.position.x, target.position.y);
-
-        if (distance < target.radius - (this.height / 3)) {
-            this.isSuccessful = true;
-            distance = 1;
-        } 
-        
-        if (distance != 0) {
-            this.fitness = 1 / (distance * age);
+        if (!this.isSuccessful) {
+            var distance = dist(this.position.x, this.position.y, target.position.x, target.position.y);
+            
+            if (distance < target.radius - (this.height / 3)) {
+                this.isSuccessful = true;
+                this.fitness = 1 / age;
+            } else {
+                this.fitness = 1 / (distance * age);
+            }
         }
     }
 
