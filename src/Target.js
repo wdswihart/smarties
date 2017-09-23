@@ -1,4 +1,4 @@
-// Population.js is the implementation of a group of rockets.
+// Target.js is an implementation of a target (think "bullseye").
 //
 // Copyright (c) 2017 William Swihart
 //
@@ -19,40 +19,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
+//
 // DEPENDENCIES:
-// p5.js
+// - p5.js
 
-function Population(size = 25, rocketMoves = 100) {
+function Target(x = width / 20, y = width / 20, radius = 30) {
     // FIELDS:
 
-    this.rockets = [];
-    this.size = size;
+    this.position = createVector(x, y);
+    this.radius = radius;
 
-    // INIT:
+    // INITIALIZATION:
 
-    for (var i = 0; i < this.size; i++) {
-        this.rockets[i] = new Rocket(rocketMoves);
-    }
-
-    // METHODS:
-
-    // Update the rockets.
-    // IN: void
-    // OUT: void
-    this.update = function() {
-        for (var i = 0; i < this.size; i++) {
-            this.rockets[i].applyForce(this.rockets[i].moves[])
-            this.rockets[i].update();
-        }
-    }
-
-    // Show the rockets.
-    // IN: void
-    // OUT: void
     this.show = function() {
-        for (var i = 0; i < this.size; i++) {
-            this.rockets[i].show();
-        }
+        ellipseMode(CENTER);
+        fill(150);
+        ellipse(this.position.x, this.position.y, this.radius, this.radius);
+        fill(240);
+        ellipse(this.position.x, this.position.y, 0.66 * this.radius, 0.66 * this.radius);
+        fill(255, 0, 0);
+        ellipse(this.position.x, this.position.y, 0.33 * this.radius, 0.33 * this.radius);
     }
 }
