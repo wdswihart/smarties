@@ -25,9 +25,6 @@
 
 // VARIABLE DECLARATION:
 
-let TARGET_SHIFT_TIME = 50;
-let count = 0;
-
 let NUM_ROCKETS = 100; // Total amount of rockets
 let LIFESPAN = 100; // How many frames to run each generation for
 var generation;// First gen of rockets
@@ -106,11 +103,5 @@ function draw() {
         generation.createMatingPool();
         selection();
         count++;
-    }
-
-    // If time to shift the target, do the thing.
-    if (count >= TARGET_SHIFT_TIME) {
-        count = 0;
-        target = new Target(random())
     }
 }
