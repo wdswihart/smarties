@@ -19,46 +19,105 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
+// 
 // DEPENDENCIES:
-// p5.js
+// - p5.js
 
-function Generation(size = 25, lifespan = 100) {
+function Generation(numRockets = 25, lifespan = 100, rockets = []) {
     // FIELDS:
 
     this.rockets = [];
-    this.size = size;
-    this.lifespan = lifespan;
+    this.numRockets = numRockets;
+    this.lifespan = lifespan; // Number of iterations
     this.age = 0; // Current iteration
+    this.matingPool = []; // Pool to generate new generation from
+    this.matingPoolScalar = 150; // Scalar for number of mates
+    this.maxFitness = 0; // Maximum fitness value
 
     // INITIALIZATION:
 
     // Init rockets.
-    for (var i = 0; i < this.size; i++) {
-        this.rockets[i] = new Rocket(lifespan);
+    if (rockets.length == 0) {
+        for (var i = 0; i < this.numRockets; i++) {
+            this.rockets.push(new Rocket(lifespan));
+        }
+    } else {
+        this.rockets = rockets;
     }
 
     // METHODS:
 
-    // show draws the rockets.
+    // evaluate calculates the rockets' fitness and generates the mating pool.
+    // IN: void
+    // OUT: fitness of each rocket set based on target
+    this.evaluate = function(target) {
+        // Calculate fitness of rockets.
+        this.maxFitness = 0;
+
+        for (var i = 0; i < this.numRockets; i++) {
+            this.rockets[i].calcFitness(target, this.age);
+            
+            if (this.rockets[i].fitness > this.maxFitness) {
+                this.maxFitness = this.rockets[i].fitness;
+            }
+        }
+
+        // Normalize fitness.
+        for (var i = 0; i < this.numRockets; i++) {
+            if (this.rockets[i].fitness != 0) {
+                this.rockets[i].fitness /= this.maxFitness;                
+            }
+        }
+    }
+
+    // createMatingPool creates the mating pool based on fitness.
     // IN: void
     // OUT: void
-    this.show = function() {
-        for (var i = 0; i < this.size; i++) {
-            this.rockets[i].show();
+    this.createMatingPool = function() {
+        this.matingPool = [];
+        
+        for (var i = 0; i < this.numRockets; i++) {
+            var n = this.rockets[i].fitness * this.matingPoolScalar;
+
+            for (var j = 0; j < n; j++) {
+                this.matingPool.push(this.rockets[i]);
+            }
         }
+    }
+
+    // countSuccesses returns number of successful rockets.
+    // IN: void
+    // OUT: number of successful rockets.
+    this.countSuccesses = function() {
+        var successes = 0;
+
+        for (var i = 0; i < this.rockets.length; i++) {
+            if (this.rockets[i].isSuccessful) {
+                successes++;
+            }
+        }
+
+        return successes;
     }
 
     // update updates the rockets.
     // IN: void
     // OUT: void
     this.update = function() {
-        if (this.age < this.lifespan) {
-            for (var i = 0; i < this.size; i++) {
-                this.rockets[i].applyForce(this.rockets[i].moves[this.age]);
-                this.rockets[i].update();
-            }
-            this.age++;
+        for (var i = 0; i < this.numRockets; i++) {
+            //console.log(this.rockets[i].moves[this.age]);
+            this.rockets[i].applyForce(this.rockets[i].moves[this.age]);
+            this.rockets[i].update();
+        }
+        this.age++;
+    }
+
+    // show draws the rockets.
+    // IN: void
+    // OUT: void
+    this.show = function() {
+        for (var i = 0; i < this.numRockets; i++) {
+            this.rockets[i].show();
         }
     }
 }

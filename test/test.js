@@ -1,4 +1,4 @@
-// Target.js is an implementation of a target (think "bullseye").
+// test.js contains testing stuff.
 //
 // Copyright (c) 2017 William Swihart
 //
@@ -23,21 +23,19 @@
 // DEPENDENCIES:
 // - p5.js
 
-function Target(x = width / 20, y = width / 20, radius = 30) {
-    // FIELDS:
+// MAIN:
 
-    this.position = createVector(x, y);
-    this.radius = radius;
+var rocket = new Rocket();
 
-    // INITIALIZATION:
+function setup() {
+    // Create the canvas.
+    createCanvas(640, 480);
+}
 
-    this.show = function() {
-        ellipseMode(CENTER);
-        fill(150);
-        ellipse(this.position.x, this.position.y, this.radius, this.radius);
-        fill(240);
-        ellipse(this.position.x, this.position.y, 0.66 * this.radius, 0.66 * this.radius);
-        fill(255, 0, 0);
-        ellipse(this.position.x, this.position.y, 0.33 * this.radius, 0.33 * this.radius);
-    }
+function draw() {
+    // Draw background.
+    background(0);
+
+    rocket.update();
+    rocket.show();
 }

@@ -19,37 +19,110 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
+//
 // DEPENDENCIES:
-// p5.js
+// - p5.js
 
 // CLASSES:
 
-function Rocket(numMoves = 100) {
+function Rocket(numMoves = 100, moves = []) {
     // FIELDS:
 
+    this.MUTATE = true;
+    this.MUTATION_RATE = 0.0025;
     this.position = createVector(width / 2, height - 5); // Start at bottom center.
-    this.velocity = p5.Vector.random2D();
+    this.velocity = createVector();
     this.acceleration = createVector();
+    this.accelerationScalar = 0.7;
     this.width = 10;
     this.height = 25;
     this.moves = [];
+    this.fitness = 0;
+    this.isSuccessful = false;
     
     // INITIALIZATION:
 
     // Init moves.
-    for (var i = 0; i < numMoves; i++) {
-        this.moves[i] = p5.Vector.random2D();
-        this.moves[i].setMag(0.3); // Reduce the velocity.
+    if (moves.length == 0) {
+        for (var i = 0; i < numMoves; i++) {
+            this.moves.push(p5.Vector.random2D());
+        }
+    } else {
+        this.moves = moves;
     }
 
     // METHODS:
 
+    // calcFitness sets fitness based on distance to a target.
+    // IN: target with a position (x, y)
+    // OUT: fitness set to (1 / distance to that target)
+    this.calcFitness = function(target, age) {
+        var distance = dist(this.position.x, this.position.y,
+            target.position.x, target.position.y);
+
+        if (distance < target.radius - (this.height / 3)) {
+            this.isSuccessful = true;
+            distance = 1;
+        } 
+        
+        if (distance != 0) {
+            this.fitness = 1 / (distance * age);
+        }
+    }
+
+    // mutate randomly changes moves.
+    // IN: void
+    // OUT: changed moves
+    this.mutate = function(moves) {
+        var vals = [0, 1, -1];
+
+        for (var i = 0; i < moves.length; i++) {
+            if (random() < this.MUTATION_RATE) { // Very small chance to mutate.
+                moves[i] = p5.Vector.random2D();
+            }
+        }
+
+        return moves;
+    }
+
+    // crossover scrambles two movesets together to produce a new set.
+    // IN: a rocket moveset
+    // OUT: a new moveset
+    this.crossover = function(moves) {
+        var newMoves = [];
+
+        for (var i = 0; i < moves.length && i < this.moves.length; i++) {
+            if (random() < 0.5) {
+                newMoves.push(this.moves[i]); // Pick from self.
+            } else {
+                newMoves.push(moves[i]); // Pick from partner.
+            }
+        }
+
+        if (this.MUTATE) {
+            return this.mutate(newMoves); // Mutate moves before returning.
+        } else {
+            return newMoves;
+        }
+    }
+    
     // applyForce increases acceleration by some force.
     // IN: a force
     // OUT: updated acceleration
     this.applyForce = function(force) {
         this.acceleration.add(force);
+        this.acceleration.setMag(this.accelerationScalar); // Reduce it just a bit.
+    }
+
+    // update updates velocity, position, and acceleration.
+    // IN: void
+    // OUT: updated velolcity, position, and acceleration 
+    this.update = function() {
+        if (!this.isSuccessful) {
+            this.velocity.add(this.acceleration);
+            this.position.add(this.velocity);
+            this.acceleration.mult(0); // Reset acceleration.
+        }
     }
 
     // show draws this rocket.
@@ -66,14 +139,5 @@ function Rocket(numMoves = 100) {
         fill(255, 90, 30);
         rect(0, this.height * 0.78, this.width * 0.7, this.height * 0.5)
         pop();
-    }
-
-    // update updates velocity, position, and acceleration.
-    // IN: void
-    // OUT: updated velolcity, position, and acceleration 
-    this.update = function() {
-        this.velocity.add(this.acceleration);
-        this.position.add(this.velocity);
-        this.acceleration.mult(0); // Reset acceleration. TO-DO: Gravity?
     }
 }

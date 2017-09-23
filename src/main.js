@@ -1,5 +1,4 @@
-// main.js contains the primary logic
-// of Smarties, a smart rocket implementation.
+// main.js contains the primary logic of Smarties, a smart rocket demo.
 //
 // Copyright (c) 2017 William Swihart
 //
@@ -20,49 +19,77 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
+//
 // DEPENDENCIES:
 // - p5.js
 
-// MAIN:
+// VARIABLE DECLARATION:
 
-const NUM_ROCKETS = 15; // Total amount of rockets
-const LIFESPAN = 200; // How many frames to run each generation for
-var generation; // Current generation of rockets
-var currentGeneration = 0; // Count for generations
+let TARGET_SHIFT_TIME = 50;
+let count = 0;
+
+let NUM_ROCKETS = 100; // Total amount of rockets
+let LIFESPAN = 100; // How many frames to run each generation for
+var generation;// First gen of rockets
+var currentGeneration = 1; // Count for generations
 var target; // The target for the rockets to aim for
-var titleP; // <p> for a title, and maybe some basic info.
+let TARGET_SCALAR = 0.05;
+var titleP; // <p> for a title, and maybe some basic info
+var numRocketsP; // <p> for number of rockets
 var generationP; // <p> for currentGeneration
-var ageP; // <p> containing age of current generation.
+var ageP; // <p> containing age of current generation
+var successP; // <p> with last generation's success count
 
-// SETUP & DRAW (p5.js):
+var newMoves;
+var nextGeneration;
+
+// FUNCTIONS:
+
+// naturalSelection picks parents from the mating pool and produces children.
+    // IN: void
+    // OUT: void
+    function selection() {
+        nextGeneration = [];
+    
+        for (var i = 0; i < NUM_ROCKETS; i++) {
+            var parent1 = random(generation.matingPool);
+            var parent2 = random(generation.matingPool);
+            newMoves = parent1.crossover(parent2.moves);
+            nextGeneration.push(new Rocket(LIFESPAN, newMoves));
+        }
+    
+        generation = new Generation(NUM_ROCKETS, LIFESPAN, nextGeneration);
+        currentGeneration++;
+    }
+
+// MAIN:
 
 function setup() {
     // Create the canvas.
     createCanvas(640, 480);
-    
-    // Create the first generation of rockets.
-    nextGeneration();
 
-    // Init the target's location.
-    target = new Target(width / 2, height / 20);
+    // Init first generation and the target.
+    generation = new Generation(NUM_ROCKETS, LIFESPAN);
+    target = new Target(width / 5, height / 3, TARGET_SCALAR * width);
 
-    // Create the DOM elements, the labels.
+    // Init the DOM elements, the labels.
     titleP = createP();
-    titleP.style("text-align", "center");
     titleP.style("text-decoration", "underline");
-    titleP.html("<strong>SMARTIES</strong>");
+    titleP.html("<strong>SMARTIES</strong><br />");
+    numRocketsP = createP();
+    numRocketsP.html("Number of rockets: <strong>" + NUM_ROCKETS + "</strong>");
     generationP = createP();
-    generationP.style("text-align", "center");
-    ageP = createP();    
-    ageP.style("text-align", "center");
+    ageP = createP();
+    successP = createP();
+    successP.html("Successes last generation: <strong>0</strong>");
 }
 
 function draw() {
-    // Fill the background.
+    // Draw the background.
     background(0);
 
-    // Update and show the generation.
+    // Evaluate, then update and show the generation.
+    generation.evaluate(target);
     generation.update();
     generation.show();
 
@@ -75,13 +102,15 @@ function draw() {
 
     // Spawn next generation if lifespan over.
     if (generation.age >= LIFESPAN) {
-        nextGeneration();
+        successP.html("Successes last generation: <strong>" + generation.countSuccesses() + "</strong>")
+        generation.createMatingPool();
+        selection();
+        count++;
     }
-}
 
-// METHODS:
-
-function nextGeneration() {
-    generation = new Generation(NUM_ROCKETS, LIFESPAN);
-    currentGeneration++;
+    // If time to shift the target, do the thing.
+    if (count >= TARGET_SHIFT_TIME) {
+        count = 0;
+        target = new Target(random())
+    }
 }
