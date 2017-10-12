@@ -25,11 +25,11 @@
 
 // CLASSES:
 
-function Rocket(numMoves = 100, moves = []) {
+function Rocket(numMoves = 100, mutationRate = 0.0025, moves = []) {
     // FIELDS:
 
     this.MUTATE = true;
-    this.MUTATION_RATE = 0.0025;
+    this.mutationRate = mutationRate;
     this.position = createVector(width / 2, height - 5); // Start at bottom center.
     this.velocity = createVector();
     this.acceleration = createVector();
@@ -63,6 +63,8 @@ function Rocket(numMoves = 100, moves = []) {
             if (distance < target.radius - (this.height / 3)) {
                 this.isSuccessful = true;
                 this.fitness = 1 / age;
+            } else if (distance > 7 * target.radius) { // Too far away.
+                this.fitness = 0;
             } else {
                 this.fitness = 1 / (distance * age);
             }
@@ -76,7 +78,7 @@ function Rocket(numMoves = 100, moves = []) {
         var vals = [0, 1, -1];
 
         for (var i = 0; i < moves.length; i++) {
-            if (random() < this.MUTATION_RATE) { // Very small chance to mutate.
+            if (random() < this.mutationRate) {
                 moves[i] = p5.Vector.random2D();
             }
         }
