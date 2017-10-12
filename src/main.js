@@ -202,7 +202,7 @@ function draw() {
             generationsElapsed = 0;
             epochsElapsed++;
             maxSuccessP.html(
-                "Max success this epoch -- At this generation: <strong>0 -- 0</strong>"
+                "Max success this epoch -- At this generation: <strong>0% -- 0</strong>"
             );
             maxSuccess = 0;
             currentGeneration = 1;

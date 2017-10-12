@@ -31,7 +31,7 @@ function Generation(numRockets = 25, lifespan = 100, mutationRate = 0.0025, rock
     this.lifespan = lifespan; // Number of iterations
     this.age = 0; // Current iteration
     this.matingPool = []; // Pool to generate new generation from
-    this.matingPoolScalar = 150; // Scalar for number of mates
+    this.matingPoolScalar = 100; // Scalar for number of mates
     this.maxFitness = 0; // Maximum fitness value
 
     // INITIALIZATION:
@@ -77,18 +77,10 @@ function Generation(numRockets = 25, lifespan = 100, mutationRate = 0.0025, rock
         this.matingPool = [];
         
         for (var i = 0; i < this.numRockets; i++) {
-            if (this.rockets[i].fitness != 0) {
-                var n = this.rockets[i].fitness * this.matingPoolScalar;
-                
-                for (var j = 0; j < n; j++) {
-                    this.matingPool.push(this.rockets[i]);
-                }
-            }
-        }
-
-        if (this.matingPool.length == 0) {
-            for (var i = 0; i < this.numRockets; i++) {
-                this.matingPool.push(new Rocket(lifespan, mutationRate));
+            var n = this.rockets[i].fitness * this.matingPoolScalar;
+            
+            for (var j = 0; j < n; j++) {
+                this.matingPool.push(this.rockets[i]);
             }
         }
     }

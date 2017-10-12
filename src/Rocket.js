@@ -63,8 +63,6 @@ function Rocket(numMoves = 100, mutationRate = 0.0025, moves = []) {
             if (distance < target.radius - (this.height / 3)) {
                 this.isSuccessful = true;
                 this.fitness = 1 / age;
-            } else if (distance > 7 * target.radius) { // Too far away.
-                this.fitness = 0;
             } else {
                 this.fitness = 1 / (distance * age);
             }
@@ -93,7 +91,7 @@ function Rocket(numMoves = 100, mutationRate = 0.0025, moves = []) {
         var newMoves = [];
 
         for (var i = 0; i < moves.length && i < this.moves.length; i++) {
-            if (random() < 0.5) {
+            if (i % 2 == 0) {
                 newMoves.push(this.moves[i]); // Pick from self.
             } else {
                 newMoves.push(moves[i]); // Pick from partner.
