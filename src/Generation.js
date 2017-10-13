@@ -23,7 +23,7 @@
 // DEPENDENCIES:
 // - p5.js
 
-function Generation(numRockets = 25, lifespan = 100, mutationRate = 0.0025, rockets = []) {
+function Generation(numRockets = 25, lifespan = 100, rockets = [], mutationRate = 0.0025, ) {
     // FIELDS:
 
     this.rockets = [];
