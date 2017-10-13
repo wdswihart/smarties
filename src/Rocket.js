@@ -25,7 +25,7 @@
 
 // CLASSES:
 
-function Rocket(numMoves = 100, mutationRate = 0.0025, moves = []) {
+function Rocket(numMoves = 100, mutationRate = 0.0025, moves = [], rand_threshold = 10) {
     // FIELDS:
 
     this.MUTATE = true;
@@ -60,11 +60,15 @@ function Rocket(numMoves = 100, mutationRate = 0.0025, moves = []) {
         if (!this.isSuccessful) {
             var distance = dist(this.position.x, this.position.y, target.position.x, target.position.y);
             
-            if (distance < target.radius - (this.height / 3)) {
-                this.isSuccessful = true;
-                this.fitness = 1 / age;
-            } else {
-                this.fitness = 1 / (distance * age);
+            if (!this.isSuccessful) {
+                if (distance < target.radius - (this.height / 4)) {
+                    this.isSuccessful = true;
+                    this.fitness = 1 / age;
+                } else if (distance > rand_threshold * target.radius) {
+                    this.fitness = 0;
+                } else {
+                    this.fitness = 1 / (distance * age);
+                }
             }
         }
     }

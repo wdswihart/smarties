@@ -23,7 +23,7 @@
 // DEPENDENCIES:
 // - p5.js
 
-function Generation(numRockets = 25, lifespan = 100, rockets = [], mutationRate = 0.0025, ) {
+function Generation(numRockets = 25, lifespan = 100, rockets = [], mutationRate = 0.0025) {
     // FIELDS:
 
     this.rockets = [];
@@ -77,10 +77,18 @@ function Generation(numRockets = 25, lifespan = 100, rockets = [], mutationRate 
         this.matingPool = [];
         
         for (var i = 0; i < this.numRockets; i++) {
-            var n = this.rockets[i].fitness * this.matingPoolScalar;
+            if (this.rockets[i].fitness != 0) {
+                var n = this.rockets[i].fitness * this.matingPoolScalar;
+                
+                for (var j = 0; j < n; j++) {
+                    this.matingPool.push(this.rockets[i]);
+                }
+            }
             
-            for (var j = 0; j < n; j++) {
-                this.matingPool.push(this.rockets[i]);
+            if (this.matingPool.length == 0) {
+                for (var j = 0; j < this.numRockets; j++) {
+                    this.matingPool.push(new Rocket(lifespan, mutationRate));
+                }
             }
         }
     }
