@@ -1,19 +1,17 @@
-# About
+# smarties
+
+## About
 
 *Smarties* is a smart rocket implementation using [p5.js](https://p5js.org/).
 
-# Goals
+## Goals
 
 - Learn concepts of genetic algorithms
 - Learn [p5.js](https://p5js.org/)
 
-# Dependencies
+## License
 
-- p5.js (Download page [here](https://p5js.org/download/))
-
-# License
-
-**Copyright (C) 2017  William Swihart**
+Copyright 2018 William Swihart
 
 Permission is hereby granted, free of charge, to any person obtaining a copy  
 of this software and associated documentation files (the "Software"), to deal  
