@@ -1,0 +1,22 @@
+{
+  "name": "smarties",
+  "version": "1.0.0",
+  "description": "*Smarties* is a smart rocket implementation using [p5.js](https://p5js.org/).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wdswihart/smarties.git"
+  },
+  "author": "William Swihart",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wdswihart/smarties/issues"
+  },
+  "homepage": "https://github.com/wdswihart/smarties#readme",
+  "dependencies": {
+    "p5": "^0.8.0"
+  }
+}
